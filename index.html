@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>วัดระยะทางจากเค้า</title>
+<style>
+body{
+  font-family: Arial;
+  text-align:center;
+  margin-top:100px;
+  background:#f4f4f4;
+}
+button{
+  padding:15px 30px;
+  font-size:18px;
+  border:none;
+  border-radius:10px;
+  background:#ff4d6d;
+  color:white;
+  cursor:pointer;
+}
+#result{
+  margin-top:20px;
+  font-size:20px;
+}
+</style>
+</head>
+<body>
+
+<h1>กดเพื่อดูว่าห่างจากเค้าแค่ไหน ❤️</h1>
+<button onclick="getLocation()">กดเลย</button>
+<div id="result"></div>
+
+<script>
+// 🔥 ใส่พิกัดของคุณตรงนี้
+const ownerLat = 14.3514186;   // ตัวอย่าง กรุงเทพ
+const ownerLon = 99.8865695;
+
+// สูตรคำนวณระยะทาง (Haversine)
+function calculateDistance(lat1, lon1, lat2, lon2){
+  const R = 6371; // รัศมีโลก (km)
+  const dLat = (lat2-lat1) * Math.PI/180;
+  const dLon = (lon2-lon1) * Math.PI/180;
+  const a =
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI/180) *
+    Math.cos(lat2 * Math.PI/180) *
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+}
+
+function getLocation(){
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(position => {
+      const userLat = position.coords.latitude;
+      const userLon = position.coords.longitude;
+
+      const distance = calculateDistance(ownerLat, ownerLon, userLat, userLon);
+
+      document.getElementById("result").innerHTML =
+        "อ้วนอยู่ห่างจากเค้า " + distance.toFixed(2) + " กิโลเมตร 💕";
+    },
+    () => {
+      document.getElementById("result").innerHTML =
+        "อนุญาตให้เข้าถึงตำแหน่งก่อนนะ 🥺";
+    });
+  } else {
+    alert("เบราว์เซอร์ไม่รองรับ GPS");
+  }
+}
+</script>
+
+</body>
+</html>
