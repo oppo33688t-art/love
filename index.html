@@ -2,43 +2,75 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>วัดระยะทางจากเค้า</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ห่างกันแค่ไหนนะ 💕</title>
+
 <style>
 body{
-  font-family: Arial;
+  margin:0;
+  font-family: Arial, sans-serif;
   text-align:center;
-  margin-top:100px;
-  background:#f4f4f4;
+  background: linear-gradient(135deg,#ff9eb5,#ffc3d1);
+  color:white;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
 }
+
+h1{
+  font-size:28px;
+}
+
 button{
   padding:15px 30px;
   font-size:18px;
   border:none;
-  border-radius:10px;
-  background:#ff4d6d;
-  color:white;
+  border-radius:12px;
+  background:white;
+  color:#ff4d6d;
   cursor:pointer;
-}
-#result{
   margin-top:20px;
+  transition:0.3s;
+}
+
+button:hover{
+  transform:scale(1.1);
+}
+
+#result{
+  margin-top:30px;
   font-size:20px;
+  max-width:300px;
+}
+
+.heart{
+  position:fixed;
+  font-size:20px;
+  animation:float 3s linear infinite;
+}
+
+@keyframes float{
+  from{ transform:translateY(0); opacity:1;}
+  to{ transform:translateY(-600px); opacity:0;}
 }
 </style>
 </head>
 <body>
 
-<h1>กดเพื่อดูว่าห่างจากเค้าแค่ไหน ❤️</h1>
+<h1>กดดูว่าเราห่างกันแค่ไหน 💖</h1>
 <button onclick="getLocation()">กดเลย</button>
 <div id="result"></div>
 
 <script>
-// 🔥 ใส่พิกัดของคุณตรงนี้
-const ownerLat = 14.3514186;   // ตัวอย่าง กรุงเทพ
-const ownerLon = 99.8865695;
 
-// สูตรคำนวณระยะทาง (Haversine)
+// 🔥 ใส่พิกัดของคุณตรงนี้
+const ownerLat = 14.3514186;  // เปลี่ยนเป็นของคุณ
+const ownerLon = 99.8865695; // เปลี่ยนเป็นของคุณ
+
 function calculateDistance(lat1, lon1, lat2, lon2){
-  const R = 6371; // รัศมีโลก (km)
+  const R = 6371;
   const dLat = (lat2-lat1) * Math.PI/180;
   const dLon = (lon2-lon1) * Math.PI/180;
   const a =
@@ -57,18 +89,49 @@ function getLocation(){
       const userLon = position.coords.longitude;
 
       const distance = calculateDistance(ownerLat, ownerLon, userLat, userLon);
+      const km = distance.toFixed(2);
+
+      let message = "";
+
+      if (distance >= 500) {
+        message = "อดทนรอหน่อยนะอ้วนเดี๋ยวเค้าจะไปหาสัญญาเลย 🥺💖";
+      }
+      else if (distance >= 250) {
+        message = "เดี๋ยวก็ได้เจอกันแล้ว 💞";
+      }
+      else if (distance <= 100) {
+        message = "จะได้เจอกันแล้วเย้ 🎉💕";
+        createHearts();
+      }
+      else {
+        message = "คิดถึงนะ 💕";
+      }
 
       document.getElementById("result").innerHTML =
-        "อ้วนอยู่ห่างจากเค้า " + distance.toFixed(2) + " กิโลเมตร 💕";
+        "ตอนนี้เราอยู่ห่างกัน " + km + " กิโลเมตร<br><br>" + message;
+
     },
     () => {
       document.getElementById("result").innerHTML =
-        "อนุญาตให้เข้าถึงตำแหน่งก่อนนะ 🥺";
+        "กดยอมรับตำแหน่งก่อนนะ 🥺";
     });
-  } else {
-    alert("เบราว์เซอร์ไม่รองรับ GPS");
   }
 }
+
+function createHearts(){
+  for(let i=0;i<15;i++){
+    const heart = document.createElement("div");
+    heart.className="heart";
+    heart.innerHTML="💖";
+    heart.style.left=Math.random()*100+"%";
+    heart.style.bottom="0";
+    heart.style.animationDuration=(2+Math.random()*2)+"s";
+    document.body.appendChild(heart);
+
+    setTimeout(()=>{ heart.remove(); },3000);
+  }
+}
+
 </script>
 
 </body>
