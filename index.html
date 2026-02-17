@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ดีกันน้า 💖</title>
+<title>ดีกันนะอ้วน 💖</title>
 
 <style>
 body {
@@ -13,11 +13,19 @@ body {
     font-family: sans-serif;
     text-align: center;
     color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
 .container {
     position: relative;
-    top: 40vh;
+}
+
+h1 {
+    font-size: 28px;
 }
 
 button {
@@ -27,7 +35,6 @@ button {
     border-radius: 15px;
     border: none;
     cursor: pointer;
-    transition: 0.2s;
 }
 
 #yesBtn {
@@ -45,14 +52,26 @@ button {
 .heart {
     position: fixed;
     top: -10px;
-    color: red;
     font-size: 20px;
     animation: fall linear infinite;
 }
 
 @keyframes fall {
+    to { transform: translateY(110vh); }
+}
+
+/* หัวใจแตก */
+.burst {
+    position: fixed;
+    font-size: 25px;
+    pointer-events: none;
+    animation: explode 1s ease-out forwards;
+}
+
+@keyframes explode {
     to {
-        transform: translateY(110vh);
+        transform: translate(var(--x), var(--y));
+        opacity: 0;
     }
 }
 </style>
@@ -61,34 +80,59 @@ button {
 <body>
 
 <div class="container">
-    <h1>ดีกันน้า 💕</h1>
-    <button id="yesBtn">ดีกัน</button>
-    <button id="noBtn">ไม่เอา</button>
+    <h1>ดีกันนะอ้วน 💕</h1>
+    <button id="yesBtn">ดีกันน</button>
+    <button id="noBtn">ไม่เอาอะ</button>
 </div>
 
 <script>
 const noBtn = document.getElementById("noBtn");
 const yesBtn = document.getElementById("yesBtn");
 
-/* ปุ่มไม่เอาวิ่งหนี */
+/* ปุ่มไม่เอาอะวิ่งหนี */
 noBtn.addEventListener("mouseover", () => {
     const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
     const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-
     noBtn.style.left = x + "px";
     noBtn.style.top = y + "px";
 });
 
+/* เอฟเฟกต์หัวใจแตก */
+function heartBurst() {
+    for (let i = 0; i < 25; i++) {
+        const heart = document.createElement("div");
+        heart.classList.add("burst");
+        heart.innerHTML = "💖";
+
+        heart.style.left = "50%";
+        heart.style.top = "50%";
+
+        const x = (Math.random() - 0.5) * 400 + "px";
+        const y = (Math.random() - 0.5) * 400 + "px";
+
+        heart.style.setProperty('--x', x);
+        heart.style.setProperty('--y', y);
+
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 1000);
+    }
+}
+
 /* กดดีกัน */
 yesBtn.addEventListener("click", () => {
-    document.body.innerHTML = `
-        <div style="display:flex;justify-content:center;align-items:center;height:100vh;">
-            <h1 style="font-size:40px;color:pink;">กอดกันนน</h1>
-        </div>
-    `;
+    heartBurst();
+
+    setTimeout(() => {
+        document.body.innerHTML = `
+            <div style="display:flex;justify-content:center;align-items:center;height:100vh;">
+                <h1 style="font-size:40px;color:pink;">ดีกันน มากอดกันน้าหมูววว</h1>
+            </div>
+        `;
+    }, 800);
 });
 
-/* สร้างหัวใจตก */
+/* หัวใจตกพื้นหลัง */
 function createHeart() {
     const heart = document.createElement("div");
     heart.classList.add("heart");
@@ -96,10 +140,7 @@ function createHeart() {
     heart.style.left = Math.random() * 100 + "vw";
     heart.style.animationDuration = (Math.random() * 3 + 2) + "s";
     document.body.appendChild(heart);
-
-    setTimeout(() => {
-        heart.remove();
-    }, 5000);
+    setTimeout(() => heart.remove(), 5000);
 }
 
 setInterval(createHeart, 300);
